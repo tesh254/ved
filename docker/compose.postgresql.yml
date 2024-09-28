@@ -1,0 +1,13 @@
+services:
+  postgresql:
+    image: postgres:15
+    restart: always
+    profiles: [ "deployment", "banking" ]
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB_NAME}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    volumes:
+      - ../postgres_data:/var/lib/postgresql/data
