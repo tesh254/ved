@@ -1,0 +1,68 @@
+{
+    # Enable admin API
+    admin 0.0.0.0:2019
+
+    # Set default SNI for localhost
+    default_sni localhost
+}
+
+{$DOMAIN}:80 {
+    log {
+        output stdout
+        format json
+    }
+
+    # Redirect to HTTPS if USE_HTTPS is true
+    @use_https expression {$USE_HTTPS} == "true"
+    redir @use_https https://{$DOMAIN}{uri} permanent
+}
+
+{$DOMAIN}:443 {
+    log {
+        output stdout
+        format json
+    }
+
+    # Use TLS with automatic HTTPS for non-localhost domains
+    tls {
+        on_demand
+    }
+
+    # Graylog
+    handle /logging* {
+        reverse_proxy graylog:9000
+    }
+
+    # Milvus
+    handle /milvus* {
+        reverse_proxy standalone:19530
+    }
+
+    # PostgreSQL
+    handle /postgresql* {
+        reverse_proxy postgresql:5432
+    }
+
+    # Minio Console
+    handle /minio* {
+        reverse_proxy minio:9001
+    }
+
+    # Default route
+    handle {
+        respond "VED Reverse Proxy" 200
+    }
+}
+
+# Additional configurations for direct service access
+:9530 {
+    reverse_proxy standalone:19530
+}
+
+:5432 {
+    reverse_proxy postgresql:5432
+}
+
+:9001 {
+    reverse_proxy minio:9001
+}

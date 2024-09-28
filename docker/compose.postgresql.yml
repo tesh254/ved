@@ -2,7 +2,7 @@ services:
   postgresql:
     image: postgres:15
     restart: always
-    profiles: [ "deployment", "banking" ]
+    profiles: [ "ved" ]
     environment:
       POSTGRES_DB: "${POSTGRES_DB_NAME}"
       POSTGRES_USER: "${POSTGRES_USER}"

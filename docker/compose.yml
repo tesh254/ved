@@ -1,3 +1,5 @@
 include:
-  - compose/compose.milvus.yml
-  - compose/compose.postgresql.ymll
+  - compose.milvus.yml
+  - compose.postgresql.yml
+  - compose.logging.yml
+  # - compose.reverse_proxy.yml
